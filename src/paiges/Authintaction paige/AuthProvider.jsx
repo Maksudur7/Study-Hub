@@ -3,28 +3,25 @@ import {
   GithubAuthProvider,
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
-  getAuth,
-  onAuthStateChanged,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
-  updateProfile
+  updateProfile,
+  onAuthStateChanged,
 } from "firebase/auth";
-import app from "../../Firebase/Firebase";
 
+import { auth } from "../../Firebase/firebase"; 
 
 export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-  const auth = getAuth(app);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  console.log(user?.email);
   const googleProvider = new GoogleAuthProvider();
   const githubProvider = new GithubAuthProvider();
 
   const createUser = (email, password) => {
-   
     setLoading(true);
     return createUserWithEmailAndPassword(auth, email, password);
   };
@@ -35,6 +32,7 @@ const AuthProvider = ({ children }) => {
   };
 
   const updatePhoto = (name, url) => {
+    if (!auth.currentUser) return;
     return updateProfile(auth.currentUser, {
       displayName: name,
       photoURL: url,
@@ -58,12 +56,12 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
-      console.log(currentUser);
+      console.log("Auth state changed →", currentUser);
       setUser(currentUser);
       setLoading(false);
     });
     return () => unSubscribe();
-  }, [auth]);
+  }, []);
 
   const authInfo = {
     createUser,

@@ -9,7 +9,7 @@ import { AuthContext } from "./AuthProvider";
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const { createUser } = useContext(AuthContext);
+  const { createUser  } = useContext(AuthContext);
   const Navigate = useNavigate()
   const handleSubmit = (e) => {
     e.preventDefault();

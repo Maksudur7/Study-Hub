@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { NavLink } from 'react-router-dom';
+import { AuthContext } from '../Authintaction paige/AuthProvider';
 
 const Overview = () => {
+    const {logOut} = useContext(AuthContext)
     return (
         <div className="p-6 mx-14  min-h-screen">
             {/* Top Stats */}
@@ -80,6 +82,7 @@ const Overview = () => {
                     <button className="bg-green-500 text-white px-4 py-2 rounded-[10px]">Record Expense</button>
                     <button className="bg-purple-500 text-white px-4 py-2 rounded-[10px]">Generate Quiz</button>
                     <button className="bg-orange-500 text-white px-4 py-2 rounded-[10px]">Add Study Goal</button>
+                    <button onClick={logOut} className="bg-black cursor-pointer text-white px-4 py-2 rounded-[10px]">Log Out</button>
                 </div>
             </div>
         </div>

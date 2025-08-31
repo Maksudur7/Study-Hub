@@ -1,9 +1,9 @@
-import React, { createContext } from "react";
+import React, {  useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { AuthContext } from "../Authintaction paige/AuthProvider";
 
 const Navbar = () => {
-    const { user } = createContext(AuthContext)
+    const {user} = useContext(AuthContext)
     console.log(user);
     return (
         <div className="p-6">
@@ -17,9 +17,9 @@ const Navbar = () => {
                     <div className="absolute right-2 w-40 flex items-center gap-3">
                         {user ? (
                             <div className="flex items-center gap-2">
-                                <p className="text-xl">Hi this is Maksudr</p>
+                                <p className="">{user?.displayName}</p>
                                 <img
-                                    className="rounded-full h-16 w-16 object-cover"
+                                    className="rounded-full h-8 w-16 object-cover"
                                     src={user.photoURL || "/default-avatar.png"}
                                     alt="User Avatar"
                                 />
