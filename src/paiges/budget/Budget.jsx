@@ -1,43 +1,75 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowUpRight, ArrowDownRight, DollarSign, Clock, Plus } from "lucide-react";
 import { NavLink, Outlet } from "react-router-dom";
+import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 
 const Budget = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [transaction, setTransaction] = useState({
-        type: '',
-        amount: '',
-        category: '',
-        description: '',
-    });
-
-    // Open the modal
+    const [incomeData, setIncomeData] = useState(0);
+    const [expenseData, setExpenseData] = useState(0);
+    const [data, setData] = useState([])
+    console.log(data);
     const handleOpenModal = () => setIsModalOpen(true);
-
-    // Close the modal
     const handleCloseModal = () => setIsModalOpen(false);
 
-    // Handle input changes
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setTransaction((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
+    const fetchData = async () => {
+        try {
+            const res = await fetch("http://localhost:5000/addTranslation");
+            const data = await res.json();
+            setData(data)
+
+            const incomeItems = data.filter((t) => t.type === "income");
+            const totalIncome = incomeItems.reduce((sum, item) => sum + Number(item.amount), 0);
+            setIncomeData(totalIncome);
+
+            const expenseItems = data.filter((t) => t.type === "expense");
+            const totalExpense = expenseItems.reduce((sum, item) => sum + Number(item.amount), 0);
+            setExpenseData(totalExpense);
+        } catch (err) {
+            console.error("Fetch error:", err);
+        }
     };
 
-    // Handle form submission
-    const handleSubmit = (e) => {
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    // 🔹 form submit
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(transaction);
-        setTransaction({ type: '', amount: '', category: '', description: '' });
-        handleCloseModal();
-        alert("Transaction added successfully!");
+
+        const type = e.target.type.value;
+        const amount = e.target.amount.value;
+        const category = e.target.category.value;
+        const description = e.target.description.value;
+
+        const translation = { type, amount, category, description };
+
+        try {
+            const res = await fetch("http://localhost:5000/addTranslation", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(translation),
+            });
+
+            if (res.ok) {
+                Swal.fire("Success", "Transaction added successfully!", "success");
+                toast.success("Transaction added successfully!");
+                fetchData();
+                handleCloseModal();
+                e.target.reset();
+            } else {
+                toast.error("Failed to add transaction");
+            }
+        } catch (error) {
+            console.log(error);
+            toast.error("Error adding transaction");
+        }
     };
 
     return (
-        <div className="min-h-screen mx-14  p-6">
-            {/* Header */}
+        <div className="min-h-screen mx-14 p-6">
             <div className="flex justify-between items-center mb-6">
                 <div>
                     <h1 className="text-2xl font-bold flex items-center gap-2">
@@ -53,20 +85,19 @@ const Budget = () => {
                 </button>
             </div>
 
-            {/* Cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                 <div className="bg-green-500 text-white p-5 rounded-lg shadow flex flex-col">
                     <div className="flex items-center gap-2 mb-8">
                         <ArrowUpRight /> <span className="font-semibold">Income</span>
                     </div>
-                    <h2 className="text-2xl font-bold">$300.00</h2>
+                    <h2 className="text-2xl font-bold">${incomeData}</h2>
                     <p className="text-sm">This month</p>
                 </div>
                 <div className="bg-red-500 text-white p-5 rounded-lg shadow flex flex-col">
                     <div className="flex items-center gap-2 mb-8">
                         <ArrowDownRight /> <span className="font-semibold">Expenses</span>
                     </div>
-                    <h2 className="text-2xl font-bold">$58.55</h2>
+                    <h2 className="text-2xl font-bold">${expenseData}</h2>
                     <p className="text-sm">This month</p>
                 </div>
 
@@ -74,7 +105,7 @@ const Budget = () => {
                     <div className="flex items-center gap-2 mb-8">
                         <DollarSign /> <span className="font-semibold">Remaining</span>
                     </div>
-                    <h2 className="text-2xl font-bold">$241.45</h2>
+                    <h2 className="text-2xl font-bold">${incomeData - expenseData}</h2>
                     <p className="text-sm">Available to spend</p>
                 </div>
 
@@ -82,25 +113,38 @@ const Budget = () => {
                     <div className="flex items-center gap-2 mb-8">
                         <Clock /> <span className="font-semibold">Budget Used</span>
                     </div>
-                    <h2 className="text-2xl font-bold">23%</h2>
+                    <h2 className="text-2xl font-bold">
+                        {incomeData > 0 ? Math.round((expenseData / incomeData) * 100) : 0}%
+                    </h2>
                     <p className="text-sm">Of total budget</p>
                 </div>
             </div>
 
             {/* Tabs */}
             <div className="bg-white p-2 rounded-lg inline-flex px-5 gap-2 mb-6">
-                <NavLink to={'/budget'} className="shadow px-4 py-2 rounded-lg font-medium">Overview</NavLink>
-                <NavLink to={'/budget/catagoris'} className="shadow px-4 py-2 rounded-lg text-gray-600">Categories</NavLink>
-                <NavLink to={'/budget/tranction'} className="shadow px-4 py-2 rounded-lg text-gray-600">Transactions</NavLink>
+                <NavLink to={"/budget"} className="shadow px-4 py-2 rounded-lg font-medium">
+                    Overview
+                </NavLink>
+                <NavLink
+                    to={"/budget/catagoris"}
+                    className="shadow px-4 py-2 rounded-lg text-gray-600"
+                >
+                    Categories
+                </NavLink>
+                <NavLink
+                    to={"/budget/tranction"}
+                    className="shadow px-4 py-2 rounded-lg text-gray-600"
+                >
+                    Transactions
+                </NavLink>
             </div>
 
             {/* Monthly Progress */}
             <div>
-                <Outlet></Outlet>
+                <Outlet context={{ income: incomeData, expens: expenseData, transactions: data }} ></Outlet>
             </div>
 
-
-            {/* Modal for Adding Transaction */}
+            {/* Modal */}
             {isModalOpen && (
                 <div className="fixed inset-0 bg bg-opacity-400 flex justify-center items-center">
                     <div className="bg-white p-6 rounded-lg shadow-lg w-96">
@@ -111,13 +155,7 @@ const Budget = () => {
                         <form onSubmit={handleSubmit}>
                             <div className="mb-4">
                                 <label htmlFor="type" className="block text-sm font-medium text-gray-700">Type</label>
-                                <select
-                                    id="type"
-                                    name="type"
-                                    value={transaction.type}
-                                    onChange={handleInputChange}
-                                    className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-blue-500"
-                                >
+                                <select id="type" name="type" className="w-full mt-1 p-2 border border-gray-300 rounded-md">
                                     <option value="">Select type</option>
                                     <option value="income">Income</option>
                                     <option value="expense">Expense</option>
@@ -126,50 +164,26 @@ const Budget = () => {
 
                             <div className="mb-4">
                                 <label htmlFor="amount" className="block text-sm font-medium text-gray-700">Amount ($)</label>
-                                <input
-                                    type="number"
-                                    id="amount"
-                                    name="amount"
-                                    value={transaction.amount}
-                                    onChange={handleInputChange}
-                                    className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-blue-500"
-                                    placeholder="0.00"
-                                />
+                                <input type="number" id="amount" name="amount" className="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="0.00" />
                             </div>
 
                             <div className="mb-4">
                                 <label htmlFor="category" className="block text-sm font-medium text-gray-700">Category</label>
-                                <select
-                                    id="category"
-                                    name="category"
-                                    value={transaction.category}
-                                    onChange={handleInputChange}
-                                    className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-blue-500"
-                                >
+                                <select id="category" name="category" className="w-full mt-1 p-2 border border-gray-300 rounded-md">
                                     <option value="">Select category</option>
                                     <option value="food">Food</option>
+                                    <option value="books">Books</option>
                                     <option value="transport">Transport</option>
-                                    <option value="entertainment">Entertainment</option>
+                                    <option value="coffee">Coffee</option>
                                 </select>
                             </div>
 
                             <div className="mb-4">
                                 <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
-                                <input
-                                    type="text"
-                                    id="description"
-                                    name="description"
-                                    value={transaction.description}
-                                    onChange={handleInputChange}
-                                    className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-blue-500"
-                                    placeholder="What did you buy?"
-                                />
+                                <input type="text" id="description" name="description" className="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="What did you buy?" />
                             </div>
 
-                            <button
-                                type="submit"
-                                className="w-full py-2 px-4 bg-green-600 text-white rounded-md hover:bg-green-700"
-                            >
+                            <button type="submit" className="w-full py-2 px-4 bg-green-600 text-white rounded-md hover:bg-green-700">
                                 Add Transaction
                             </button>
                         </form>

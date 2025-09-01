@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Swal from 'sweetalert2';
+import { AuthContext } from '../Authintaction paige/AuthProvider';
 
 const colors = [
     "from-blue-400 to-blue-600",
@@ -16,30 +17,34 @@ const Schedule = () => {
     const [classes, setClasses] = useState([]);
     const [allClasses, setAllClasses] = useState([]);
     const [selectedDay, setSelectedDay] = useState("today");
+    const { user } = useContext(AuthContext)
 
-   
+
     const todayName = new Date().toLocaleDateString("en-US", { weekday: "long" });
 
-   
+
     useEffect(() => {
         fetch("http://localhost:5000/studentHub")
             .then(res => res.json())
             .then(data => {
-                setAllClasses(data);
+                // console.log(user);
+                const emailAuth = data.filter(valure => valure?.email === user?.email)
+                console.log(emailAuth);
+                setAllClasses(emailAuth);
             })
             .catch(err => console.error("Error fetching classes:", err));
-    }, []);
+    }, [user]);
 
     const [todayClass, setTodayClass] = useState('')
     useEffect(() => {
         let filteredClasses = allClasses;
 
-        
+
         const now = new Date();
         filteredClasses = filteredClasses.filter(cls => {
-            if (!cls.createdAt) return true; 
-            const diff = (now - new Date(cls.createdAt)) / (1000 * 60 * 60 * 24); 
-            return diff < 7; 
+            if (!cls.createdAt) return true;
+            const diff = (now - new Date(cls.createdAt)) / (1000 * 60 * 60 * 24);
+            return diff < 7;
         });
 
         if (selectedDay === "all") {
@@ -52,7 +57,7 @@ const Schedule = () => {
         }
     }, [selectedDay, allClasses, todayName]);
 
-    
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const className = e.target.className.value;
@@ -60,14 +65,16 @@ const Schedule = () => {
         const time = e.target.time.value;
         const location = e.target.location.value;
         const professor = e.target.professor.value;
+        const email = user?.email
 
-        const newClass = { 
-            className, 
-            day, 
-            time, 
-            location, 
+        const newClass = {
+            className,
+            email,
+            day,
+            time,
+            location,
             professor,
-            createdAt: new Date() 
+            createdAt: new Date()
         };
 
         try {
@@ -81,7 +88,7 @@ const Schedule = () => {
                 Swal.fire("Success", "Class added successfully!", "success");
                 toast.success("Class added successfully!");
 
-                
+
                 const updated = await res.json();
                 setAllClasses(prev => [...prev, updated]);
             }
@@ -91,7 +98,7 @@ const Schedule = () => {
         }
     };
 
-   
+
     const handleClick = () => {
         toast.info(
             <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">

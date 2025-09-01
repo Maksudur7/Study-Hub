@@ -10,7 +10,7 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 
-import { auth } from "../../Firebase/firebase"; 
+import { auth } from "../../Firebase/firebase";
 
 export const AuthContext = createContext();
 
@@ -54,13 +54,26 @@ const AuthProvider = ({ children }) => {
     return signInWithPopup(auth, githubProvider);
   };
 
+  // useEffect(() => {
+  //   const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
+  //     console.log("Auth state changed →", currentUser);
+  //     setUser(currentUser);
+  //     setLoading(false);
+  //   });
+  //   return () => unSubscribe();
+  // }, []);
+
   useEffect(() => {
-    const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
-      console.log("Auth state changed →", currentUser);
-      setUser(currentUser);
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser); 
+      } else {
+        setUser(null);         
+      }
       setLoading(false);
     });
-    return () => unSubscribe();
+
+    return () => unsubscribe();
   }, []);
 
   const authInfo = {

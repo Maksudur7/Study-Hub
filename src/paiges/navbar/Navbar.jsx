@@ -20,7 +20,7 @@ const Navbar = () => {
                                 <p className="">{user?.displayName}</p>
                                 <img
                                     className="rounded-full h-8 w-16 object-cover"
-                                    src={user.photoURL || "/default-avatar.png"}
+                                    src={user?.photoURL || "/default-avatar.png"}
                                     alt="User Avatar"
                                 />
                             </div>
