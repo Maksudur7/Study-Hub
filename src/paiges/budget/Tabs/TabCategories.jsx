@@ -45,7 +45,7 @@ const TabCategories = () => {
     const getProgress = (spent, budget) => {
         if (budget <= 0) return 0;
         const percent = (spent / budget) * 100;
-        return Math.min(percent, 100); // সর্বোচ্চ 100% পর্যন্ত
+        return Math.min(percent, 100); 
     };
 
     return (

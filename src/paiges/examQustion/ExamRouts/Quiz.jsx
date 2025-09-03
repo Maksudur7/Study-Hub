@@ -1,10 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Trophy, RefreshCcw, Edit } from 'lucide-react'; // Import Lucide icons for the buttons
 import { NavLink } from 'react-router-dom';
 
 const Quiz = () => {
-    const score = 100; // Example score
-    const totalQuestions = 1;
+    // const score = 100; // Example score
+    // const totalQuestions = 1;
+
+    const [score, setScore] = useState(0)
+
+    useEffect(() => {
+        const Score = localStorage?.getItem("Score");
+        console.log(score);
+        const parsScore = JSON?.parse(Score)
+        setScore(parsScore)
+
+    }, [score])
 
     return (
         <div className=" bg-gray-100  flex justify-center items-center">
@@ -15,10 +25,10 @@ const Quiz = () => {
                 </div>
 
                 <h2 className="text-3xl font-bold text-purple-700">Quiz Complete! 🎉</h2>
-                <p className="text-lg text-gray-600 mt-2">You got {score} out of {totalQuestions} questions correct!</p>
+                <p className="text-lg text-gray-600 mt-2">You got {score} out of 10 questions correct!</p>
 
                 {/* Score */}
-                <div className="text-4xl font-bold text-purple-600 mt-6">{score}%</div>
+                <div className="text-4xl font-bold text-purple-600 mt-6">{score*10}%</div>
 
                 {/* Buttons */}
                 <div className="mt-8 flex w-full  justify-center items-center gap-10 ">
