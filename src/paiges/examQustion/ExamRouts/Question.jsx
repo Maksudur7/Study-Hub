@@ -19,13 +19,7 @@ const Question = () => {
     }
   }, []);
 
-  if (!qustionData || qustionData.length === 0) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <p>Loading quiz...</p>
-      </div>
-    );
-  }
+ 
 
   const currentQuestion = qustionData[questionIndex];
 
@@ -51,9 +45,10 @@ const Question = () => {
     }
   };
 
-  const handleFinishQuiz = () => {
+  const handleFinishQuiz = async () => {
     const updatedAnswers = [...userAnswers];
     updatedAnswers[questionIndex] = selectedAnswer;
+
 
     // ✅ calculate score
     let correctCount = 0;
@@ -65,6 +60,26 @@ const Question = () => {
         correctCount++;
       }
     });
+
+    // quizId
+
+    const id = localStorage?.getItem("quizId");
+    console.log(score);
+    const quizId = JSON?.parse(id)
+
+    const date = new Date().toLocaleTimeString()
+    const res = await fetch(`http://localhost:5000/quizData/${quizId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        date: date,
+        score: correctCount
+      })
+    });
+
+    console.log(res);
 
     setUserAnswers(updatedAnswers);
     setScore(correctCount);
@@ -80,13 +95,10 @@ const Question = () => {
   if (showResult) {
     localStorage.setItem("Score", JSON.stringify(score));
     navigate('/examQustion/quiz')
-    // return (
-    //   <div className="flex flex-col items-center justify-center h-screen">
-    //     <h1 className="text-2xl font-bold mb-4">Quiz Finished!</h1>
-    //     <p className="text-lg">You got <span className="font-semibold">{score}</span> out of {qustionData.length} correct 🎉</p>
-    //   </div>
-    // );
+
   }
+
+
 
   return (
     <div className="bg-gray-100 flex justify-center items-center">

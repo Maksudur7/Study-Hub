@@ -40,11 +40,11 @@ const ExamQustion = () => {
   const [chapterQuery, setChapterQuery] = useState("");
   const [selectedChapters, setSelectedChapters] = useState([]);
   const [data, setData] = useState([]);
-  const [qustiondata, setQustionData] = useState([])
+  // const [qustiondata, setQustionData] = useState([])
 
   const chapters = selectedSubject ? chapterData[selectedSubject] || [] : [];
 
-  
+
 
   const fetchData = async () => {
     try {
@@ -78,7 +78,7 @@ const ExamQustion = () => {
     const subjectName = subjects.find((s) => s.id === Number(subjectId))?.name;
 
     const quizDatas = {
-      title,
+      title: title,
       subject: subjectName,
       chapters: selectedChapters,
     };
@@ -89,13 +89,13 @@ const ExamQustion = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(quizDatas),
       });
-
+      
       if (res.ok) {
         Swal.fire("Success", "Quiz added successfully!", "success");
         toast.success("Quiz added successfully!");
         await res.json();
 
-        
+
         fetchData();
       } else {
         toast.error("Failed to add Quiz");

@@ -1,16 +1,33 @@
-import React from 'react';
-import { BarChart, FileText, Clock, CheckCircle } from 'lucide-react'; // Import icons from lucide-react
+import React, { useEffect, useState } from 'react';
+import { BarChart, FileText, Clock, CheckCircle } from 'lucide-react'; 
 
 const History = () => {
-    const quizzesCompleted = 24;
-    const averageScore = 87;
+    // const averageScore = 87;
+    const [quizData, setQuizData] = useState([])
+    const [averageScore, setAverageScore] = useState(null)
 
-    const recentQuizzes = [
-        { name: 'Mathematics', questions: 10, date: 'Jan 15', score: 92 },
-        { name: 'Physics', questions: 8, date: 'Jan 14', score: 85 },
-        { name: 'Chemistry', questions: 12, date: 'Jan 13', score: 78 },
-        { name: 'Biology', questions: 15, date: 'Jan 12', score: 94 },
-    ];
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await fetch("http://localhost:5000/quizData");
+                const result = await res.json();
+                setQuizData(result);
+                if (result.length) {
+                    const totalScore = result.reduce((total, quiz) => total + (quiz.score || 0), 0);
+                    const avg = totalScore / result.length;
+                    setAverageScore(avg.toFixed(2));
+                }
+                // setLoading(false);
+            } catch (error) {
+                console.error("Error fetching quiz history:", error);
+                // setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+
 
     return (
         <div className="min-h-screen  p-6">
@@ -20,7 +37,7 @@ const History = () => {
                     <FileText size={40} />
                     <div>
                         <h2 className="text-2xl font-bold">Total Quizzes</h2>
-                        <p className="text-lg">{quizzesCompleted} Completed this month</p>
+                        <p className="text-lg">{quizData.length} Completed this month</p>
                     </div>
                 </div>
 
@@ -37,20 +54,21 @@ const History = () => {
             {/* Recent Quiz Results */}
             <div className="bg-white p-6 rounded-lg shadow-lg">
                 <h2 className="text-2xl font-bold mb-4">Recent Quiz Results</h2>
-                {recentQuizzes.map((quiz, index) => (
+                {quizData.map((quiz, index) => (
                     <div key={index} className="flex justify-between items-center mb-4">
                         <div className="flex items-center gap-4">
                             <div className="w-8 h-8 bg-gray-200 rounded-full flex justify-center items-center">
                                 <Clock size={20} className="text-gray-600" />
                             </div>
                             <div>
-                                <p className="font-semibold">{quiz.name}</p>
-                                <p className="text-sm text-gray-500">{quiz.questions} questions • {quiz.date}</p>
+                                <p className="font-semibold">{quiz.subject}</p>
+                                <p className="text-sm text-gray-500">{quiz.score} questions • {quiz.date}</p>
                             </div>
                         </div>
                         <div className="text-right">
                             <p className={`font-bold ${quiz.score >= 90 ? 'text-green-600' : quiz.score >= 75 ? 'text-yellow-600' : 'text-red-600'}`}>
-                                {quiz.score}%
+
+                                {quiz.score * 10}%
                             </p>
                         </div>
                     </div>
