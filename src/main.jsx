@@ -21,6 +21,9 @@ import Question from './paiges/examQustion/ExamRouts/Question.jsx';
 import SignIn from './paiges/Authintaction paige/SignIn.jsx';
 import SignUP from './paiges/Authintaction paige/SignUP.jsx';
 import AuthProvider from './paiges/Authintaction paige/AuthProvider.jsx';
+import TodayTask from './paiges/StudyPlan/Today\'s Task/TodayTask.jsx';
+import OverDue from './paiges/StudyPlan/Today\'s Task/OverDue/OverDue.jsx';
+import ActiveGole from './paiges/StudyPlan/Active Gole/ActiveGole.jsx';
 
 
 const router = createBrowserRouter([
@@ -78,7 +81,21 @@ const router = createBrowserRouter([
       },
       {
         path: '/studyPlan',
-        element: <StudyPlan></StudyPlan>
+        element: <StudyPlan></StudyPlan>,
+        children:[
+          {
+            path: '/studyPlan',
+            element: <TodayTask></TodayTask>
+          },
+          {
+            path: '/studyPlan/overDue',
+            element: <OverDue></OverDue>
+          },
+          {
+            path: '/studyPlan/activeGole',
+            element: <ActiveGole></ActiveGole>
+          }
+        ]
       },
 
     ]
