@@ -9,7 +9,7 @@ import Loding from "../../Loding paige/Loding";
 const PAGE_SIZE = 4;
 
 const Subjects = () => {
-  const { fetchData = [] } = useOutletContext() || {};
+  const { quizData = [] } = useOutletContext() || {};
   const [page, setPage] = useState(1);
   const [loding, setLoding] = useState(false);
   const navigate = useNavigate();
@@ -24,7 +24,7 @@ const Subjects = () => {
   const handleStartQuiz = async (id) => {
     setLoding(true);
     try {
-      const element = fetchData.find((element) => element._id === id);
+      const element = quizData.find((element) => element._id === id);
       const qustionDaraObj = {
         subject: element.subject,
         chapters: element.chapters,
@@ -58,16 +58,16 @@ const Subjects = () => {
   };
 
   // ------------------ Pagination Logic ------------------
-  const totalPages = Math.max(1, Math.ceil((fetchData?.length || 0) / PAGE_SIZE));
+  const totalPages = Math.max(1, Math.ceil((quizData?.length || 0) / PAGE_SIZE));
 
   useEffect(() => {
     if (page > totalPages) setPage(totalPages);
-  }, [fetchData?.length, totalPages, page]);
+  }, [quizData?.length, totalPages, page]);
 
   const currentItems = useMemo(() => {
     const start = (page - 1) * PAGE_SIZE;
-    return (fetchData || []).slice(start, start + PAGE_SIZE);
-  }, [fetchData, page]);
+    return (quizData || [])?.slice(start, start + PAGE_SIZE);
+  }, [quizData, page]);
 
   const goPrev = () => setPage((p) => Math.max(1, p - 1));
   const goNext = () => setPage((p) => Math.min(totalPages, p + 1));
@@ -101,7 +101,7 @@ const Subjects = () => {
                 </span>
               </div>
               <span className="text-sm text-gray-600">
-                {Array.isArray(item.chapters) ? item.chapters.length : 0} Q's
+                10 Q's
               </span>
             </div>
 

@@ -1,17 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { BarChart, FileText, Clock, CheckCircle } from 'lucide-react'; 
+import React, { useContext, useEffect, useState } from 'react';
+import { BarChart, FileText, Clock, CheckCircle } from 'lucide-react';
+import { AuthContext } from '../../Authintaction paige/AuthProvider';
 
 const History = () => {
     // const averageScore = 87;
     const [quizData, setQuizData] = useState([])
     const [averageScore, setAverageScore] = useState(null)
+    const { user } = useContext(AuthContext)
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const res = await fetch("http://localhost:5000/quizData");
                 const result = await res.json();
-                setQuizData(result);
+                const userData = result.filter(e => e.email === user?.email)
+                setQuizData(userData);
                 if (result.length) {
                     const totalScore = result.reduce((total, quiz) => total + (quiz.score || 0), 0);
                     const avg = totalScore / result.length;

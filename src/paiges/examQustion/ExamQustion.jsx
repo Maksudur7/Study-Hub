@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Brain,
   Plus,
@@ -14,6 +14,7 @@ import {
 import { NavLink, Outlet } from "react-router-dom";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
+import { AuthContext } from "../Authintaction paige/AuthProvider";
 
 const subjects = [
   { id: 1, name: "Mathematics", icon: <Calculator className="text-purple-500" size={20} /> },
@@ -41,6 +42,7 @@ const ExamQustion = () => {
   const [selectedChapters, setSelectedChapters] = useState([]);
   const [data, setData] = useState([]);
   // const [qustiondata, setQustionData] = useState([])
+  const { user } = useContext(AuthContext)
 
   const chapters = selectedSubject ? chapterData[selectedSubject] || [] : [];
 
@@ -50,15 +52,14 @@ const ExamQustion = () => {
     try {
       const res = await fetch("http://localhost:5000/quizData");
       const result = await res.json();
-      setData(result);
+      const userData = result.filter(e => e.email === user?.email)
+      setData(userData);
     } catch (err) {
       console.log(err);
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+
 
   const handleAddChapter = (chapter) => {
     if (!selectedChapters.includes(chapter)) {
@@ -81,6 +82,7 @@ const ExamQustion = () => {
       title: title,
       subject: subjectName,
       chapters: selectedChapters,
+      email: user?.email
     };
 
     try {
@@ -89,14 +91,13 @@ const ExamQustion = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(quizDatas),
       });
-      
+
       if (res.ok) {
+        fetchData();
         Swal.fire("Success", "Quiz added successfully!", "success");
         toast.success("Quiz added successfully!");
         await res.json();
 
-
-        fetchData();
       } else {
         toast.error("Failed to add Quiz");
       }
@@ -110,6 +111,9 @@ const ExamQustion = () => {
     setSelectedSubject(null);
     setChapterQuery("");
   };
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <div className="min-h-screen mx-14 p-6">
@@ -143,7 +147,7 @@ const ExamQustion = () => {
       </div>
 
       <div>
-        <Outlet context={{ fetchData: data }} />
+        <Outlet context={{ quizData: data }} />
       </div>
 
       {/* Modal */}
