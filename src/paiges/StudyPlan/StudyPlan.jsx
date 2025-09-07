@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Plus, X, CheckCircle, Edit, FileText, AlertTriangle, Book, Bookmark } from 'lucide-react'; // Importing all required icons
 import { Form, NavLink, Outlet } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
+import { AuthContext } from '../Authintaction paige/AuthProvider';
 
 const StudyPlan = () => {
     const [isAddTaskOpen, setAddTaskOpen] = useState(false);
@@ -11,7 +12,7 @@ const StudyPlan = () => {
     const [inputValue, setInputValue] = useState("");
     const [tasks, setTask] = useState([]);
     const [overdueTasks, setOverdueTasks] = useState([])
-
+    const { user } = useContext(AuthContext)
 
     const handleKeyDown = (e) => {
         if (e.key === "Enter" && inputValue.trim() !== "") {
@@ -29,7 +30,8 @@ const StudyPlan = () => {
         try {
             const res = await fetch("http://localhost:5000/addTask");
             const result = await res.json();
-            setTask(result);
+            const taskFilter = result.filter(e => e.email === user.email)
+            setTask(taskFilter);
             // console.log('result is ', result);
         } catch (err) {
             console.log(err);
@@ -44,6 +46,7 @@ const StudyPlan = () => {
             description: e.target.description.value,
             priority: e.target.priority.value,
             dueDate: e.target.dueDate.value,
+            email: user.email
         };
 
 
@@ -85,7 +88,8 @@ const StudyPlan = () => {
         try {
             const res = await fetch("http://localhost:5000/addGole");
             const result = await res.json();
-            setGoleData(result);
+            const goleFilter = result.filter(e => e.email === user.email)
+            setGoleData(goleFilter);
             console.log('result is ', result);
         } catch (err) {
             console.log(err);
@@ -101,6 +105,7 @@ const StudyPlan = () => {
             subject: e.target.subject.value,
             priority: e.target.priority.value,
             targetDate: e.target.targetDate.value,
+            email: user.email
         };
         const res = await fetch('http://localhost:5000/addGole', {
             method: "POST",
@@ -395,7 +400,7 @@ const StudyPlan = () => {
                 </div>
             )}
 
-            <Outlet context={{ tasks: tasks, handelTaskDelet: handelTaskDelet, setOverdueTasks: setOverdueTasks, fetchData: fetchData, goleData: goleData, handelGoleDelet:handelGoleDelet }} ></Outlet>
+            <Outlet context={{ tasks: tasks, handelTaskDelet: handelTaskDelet, setOverdueTasks: setOverdueTasks, fetchData: fetchData, goleData: goleData, handelGoleDelet: handelGoleDelet }} ></Outlet>
         </div>
     );
 };

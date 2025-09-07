@@ -1,14 +1,16 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ArrowUpRight, ArrowDownRight, DollarSign, Clock, Plus } from "lucide-react";
 import { NavLink, Outlet } from "react-router-dom";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
+import { AuthContext } from "../Authintaction paige/AuthProvider";
 
 const Budget = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [incomeData, setIncomeData] = useState(0);
     const [expenseData, setExpenseData] = useState(0);
     const [data, setData] = useState([])
+    const { user } = useContext(AuthContext)
     console.log(data);
     const handleOpenModal = () => setIsModalOpen(true);
     const handleCloseModal = () => setIsModalOpen(false);
@@ -17,7 +19,8 @@ const Budget = () => {
         try {
             const res = await fetch("http://localhost:5000/addTranslation");
             const data = await res.json();
-            setData(data)
+            const filterData = data.filter(e => e.email === user.email)
+            setData(filterData)
 
             const incomeItems = data.filter((t) => t.type === "income");
             const totalIncome = incomeItems.reduce((sum, item) => sum + Number(item.amount), 0);
@@ -43,8 +46,9 @@ const Budget = () => {
         const amount = e.target.amount.value;
         const category = e.target.category.value;
         const description = e.target.description.value;
+        const email = user.email
 
-        const translation = { type, amount, category, description };
+        const translation = { type, amount, category, description, email };
 
         try {
             const res = await fetch("http://localhost:5000/addTranslation", {
