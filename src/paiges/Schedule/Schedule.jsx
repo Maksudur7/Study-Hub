@@ -24,10 +24,9 @@ const Schedule = () => {
 
 
     useEffect(() => {
-        fetch("http://localhost:5000/studentHub")
+        fetch("https://study-plan-backend-beta.vercel.app/studentHub")
             .then(res => res.json())
             .then(data => {
-                // console.log(user);
                 const emailAuth = data.filter(valure => valure?.email === user?.email)
                 console.log(emailAuth);
                 setAllClasses(emailAuth);
@@ -78,7 +77,7 @@ const Schedule = () => {
         };
 
         try {
-            const res = await fetch("http://localhost:5000/studentHub", {
+            const res = await fetch("https://study-plan-backend-beta.vercel.app/studentHub", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(newClass)

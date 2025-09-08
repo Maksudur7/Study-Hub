@@ -7,9 +7,6 @@ import Swal from 'sweetalert2';
 
 const TodayTask = () => {
     const { tasks, handelTaskDelet , fetchData } = useOutletContext()
-    // const [isAddEditOpen, setAddEditOpen] = useState(false);
-    // const [goals, setGoals] = useState([]);
-    // const [inputValue, setInputValue] = useState("");
     const [isAddEditOpen, setAddEditOpen] = useState(false);
     const [goals, setGoals] = useState([]);
     const [inputValue, setInputValue] = useState("");
@@ -29,7 +26,7 @@ const TodayTask = () => {
 
     const handleKeyDown = (e) => {
         if (e.key === "Enter" && inputValue.trim() !== "") {
-            e.preventDefault(); // prevent form submit
+            e.preventDefault(); 
             setGoals([...goals, inputValue.trim()]);
             setInputValue("");
         }
@@ -44,7 +41,7 @@ const TodayTask = () => {
 
         if (!selectedTask) return;
         try {
-            const res = await fetch(`http://localhost:5000/addTask/${selectedTask._id}`, {
+            const res = await fetch(`https://study-plan-backend-beta.vercel.app/addTask/${selectedTask._id}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",

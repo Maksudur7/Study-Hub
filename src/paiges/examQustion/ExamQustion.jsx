@@ -50,7 +50,7 @@ const ExamQustion = () => {
 
   const fetchData = async () => {
     try {
-      const res = await fetch("http://localhost:5000/quizData");
+      const res = await fetch("https://study-plan-backend-beta.vercel.app/quizData");
       const result = await res.json();
       const userData = result.filter(e => e.email === user?.email)
       setData(userData);
@@ -75,7 +75,7 @@ const ExamQustion = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const title = e?.target?.title?.value;
-    const subjectId = selectedSubject; // id save
+    const subjectId = selectedSubject; 
     const subjectName = subjects.find((s) => s.id === Number(subjectId))?.name;
 
     const quizDatas = {
@@ -86,7 +86,7 @@ const ExamQustion = () => {
     };
 
     try {
-      const res = await fetch("http://localhost:5000/quizData", {
+      const res = await fetch("https://study-plan-backend-beta.vercel.app/quizData", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(quizDatas),
@@ -117,7 +117,7 @@ const ExamQustion = () => {
 
   return (
     <div className="min-h-screen mx-14 p-6">
-      {/* Header */}
+      
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
@@ -133,7 +133,7 @@ const ExamQustion = () => {
         </button>
       </div>
 
-      {/* Tabs */}
+     
       <div className="inline-flex p-2 px-5 bg-white rounded-xl gap-2 mb-6">
         <NavLink to={"/examQustion"} className="shadow px-4 py-2 rounded-lg font-medium">
           Subjects
@@ -150,7 +150,7 @@ const ExamQustion = () => {
         <Outlet context={{ quizData: data }} />
       </div>
 
-      {/* Modal */}
+      
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
           <div className="bg-white w-[480px] rounded-lg shadow-lg p-6 relative">
@@ -166,7 +166,7 @@ const ExamQustion = () => {
             </div>
 
             <form onSubmit={handleSubmit}>
-              {/* Quiz Title */}
+              
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-1">Quiz Title</label>
                 <input
@@ -179,13 +179,13 @@ const ExamQustion = () => {
                 />
               </div>
 
-              {/* Subject */}
+              
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-1">Subject</label>
                 <select
                   value={selectedSubject || ""}
                   onChange={(e) => {
-                    setSelectedSubject(e.target.value); // এখন id save হবে
+                    setSelectedSubject(e.target.value); 
                     setSelectedChapters([]);
                   }}
                   id="subject"
@@ -202,13 +202,13 @@ const ExamQustion = () => {
                 </select>
               </div>
 
-              {/* Chapter Search + Tags */}
+              
               {selectedSubject && (
                 <div className="mb-6">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Select Chapters
                   </label>
-                  {/* Selected Tags */}
+                 
                   <div className="flex flex-wrap gap-2 mb-2">
                     {selectedChapters.map((ch) => (
                       <span
@@ -225,7 +225,7 @@ const ExamQustion = () => {
                       </span>
                     ))}
                   </div>
-                  {/* Search Input */}
+                 
                   <input
                     type="text"
                     value={chapterQuery}
@@ -233,7 +233,7 @@ const ExamQustion = () => {
                     placeholder="Search chapter..."
                     className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-black focus:outline-none"
                   />
-                  {/* Suggestions */}
+                  
                   {chapterQuery && (
                     <div className="border border-gray-300 rounded-md mt-1 bg-white shadow max-h-40 overflow-y-auto">
                       {chapters
@@ -254,8 +254,6 @@ const ExamQustion = () => {
                   )}
                 </div>
               )}
-
-              {/* Submit */}
               <div className="flex justify-end">
                 <button
                   type="submit"

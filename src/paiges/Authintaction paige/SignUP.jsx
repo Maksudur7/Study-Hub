@@ -32,9 +32,7 @@ const SignUp = () => {
         if (result.user) {
           Navigate(location?.state ? location?.state : '/')
         }
-        // updatePhoto(`${firstName} ${lastName}`, null).catch((err) =>
-        //   console.error("Profile update failed:", err)
-        // );
+        
       })
       .catch((error) => {
         console.error("Error creating user:", error.message);

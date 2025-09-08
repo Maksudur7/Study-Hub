@@ -41,7 +41,7 @@ const TabCategories = () => {
         { name: 'Transport', amountSpent: totalTransportExpense, budget: totalTransportIncome, icon: <Truck className="text-green-500" /> },
     ];
 
-    // Progress calculation with clamp
+    // Progress calculation 
     const getProgress = (spent, budget) => {
         if (budget <= 0) return 0;
         const percent = (spent / budget) * 100;

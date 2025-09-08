@@ -6,7 +6,7 @@ const Question = () => {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [questionIndex, setQuestionIndex] = useState(0);
   const [qustionData, setQustionData] = useState([]);
-  const [userAnswers, setUserAnswers] = useState([]); // store user's answers
+  const [userAnswers, setUserAnswers] = useState([]); 
   const [showResult, setShowResult] = useState(false);
   const [score, setScore] = useState(0);
   const navigate = useNavigate()
@@ -18,8 +18,6 @@ const Question = () => {
       setUserAnswers(new Array(JSON.parse(savedQuiz).length).fill(null));
     }
   }, []);
-
- 
 
   const currentQuestion = qustionData[questionIndex];
 
@@ -34,7 +32,7 @@ const Question = () => {
 
     if (questionIndex < qustionData.length - 1) {
       setQuestionIndex((prev) => prev + 1);
-      setSelectedAnswer(updatedAnswers[questionIndex + 1]); // load prev selection if exists
+      setSelectedAnswer(updatedAnswers[questionIndex + 1]); 
     }
   };
 
@@ -49,26 +47,23 @@ const Question = () => {
     const updatedAnswers = [...userAnswers];
     updatedAnswers[questionIndex] = selectedAnswer;
 
-
-    // ✅ calculate score
     let correctCount = 0;
     updatedAnswers.forEach((ans, idx) => {
       if (!ans) return;
-      const correctLetter = qustionData[idx].answer; // "A", "B", ...
+      const correctLetter = qustionData[idx].answer; 
       const correctOption = qustionData[idx].options[letterToIndex(correctLetter)];
       if (ans === correctOption) {
         correctCount++;
       }
     });
 
-    // quizId
 
     const id = localStorage?.getItem("quizId");
     console.log(score);
     const quizId = JSON?.parse(id)
 
     const date = new Date().toLocaleTimeString()
-    const res = await fetch(`http://localhost:5000/quizData/${quizId}`, {
+    const res = await fetch(`https://study-plan-backend-beta.vercel.app/quizData/${quizId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json"
@@ -86,7 +81,6 @@ const Question = () => {
     setShowResult(true);
   };
 
-  // helper: convert "A"/"B"/"C"/"D" → index
   const letterToIndex = (letter) => {
     const map = { A: 0, B: 1, C: 2, D: 3 };
     return map[letter];
@@ -120,12 +114,12 @@ const Question = () => {
 
         {/* Question */}
         <h2 className="text-xl font-semibold text-gray-700 mb-6">
-          {currentQuestion.question}
+          {currentQuestion?.question}
         </h2>
 
         {/* Options */}
         <div className="space-y-4">
-          {currentQuestion.options.map((option, index) => (
+          {currentQuestion?.options.map((option, index) => (
             <div
               key={index}
               className={`p-4 border rounded-lg cursor-pointer transition-all 

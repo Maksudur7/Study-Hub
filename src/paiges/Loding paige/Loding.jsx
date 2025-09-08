@@ -4,7 +4,7 @@ import { BookOpen } from "lucide-react";
 
 const Loding = () => {
     return (
-        <div className="h-screen w-screen flex flex-col items-center justify-center bg-gradient-to-br from-purple-600 to-indigo-700 text-white">
+        <div className="h-screen flex flex-col items-center justify-center  text-black">
             {/* Animated Icon */}
             <motion.div
                 initial={{ scale: 0 }}
@@ -29,7 +29,7 @@ const Loding = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
             >
-                StudyHub Loading...
+                Please wait, your question will be ready soon...
             </motion.h1>
 
             {/* Animated Dots */}
@@ -41,7 +41,7 @@ const Loding = () => {
                 {[0, 1, 2].map((dot) => (
                     <motion.span
                         key={dot}
-                        className="w-3 h-3 bg-white rounded-full"
+                        className="w-3 h-3 bg-black rounded-full"
                         animate={{ y: [0, -8, 0] }}
                         transition={{
                             duration: 0.6,

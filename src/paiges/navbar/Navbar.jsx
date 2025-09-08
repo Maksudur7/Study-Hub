@@ -4,7 +4,6 @@ import { AuthContext } from "../Authintaction paige/AuthProvider";
 
 const Navbar = () => {
     const {user} = useContext(AuthContext)
-    // console.log(user?.email);
     return (
         <div className="p-6">
             {/* Header */}

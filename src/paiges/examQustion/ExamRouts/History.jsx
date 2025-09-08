@@ -3,7 +3,7 @@ import { BarChart, FileText, Clock, CheckCircle } from 'lucide-react';
 import { AuthContext } from '../../Authintaction paige/AuthProvider';
 
 const History = () => {
-    // const averageScore = 87;
+    
     const [quizData, setQuizData] = useState([])
     const [averageScore, setAverageScore] = useState(null)
     const { user } = useContext(AuthContext)
@@ -11,7 +11,7 @@ const History = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await fetch("http://localhost:5000/quizData");
+                const res = await fetch("https://study-plan-backend-beta.vercel.app/quizData");
                 const result = await res.json();
                 const userData = result.filter(e => e.email === user?.email)
                 setQuizData(userData);
@@ -20,10 +20,10 @@ const History = () => {
                     const avg = totalScore / result.length;
                     setAverageScore(avg.toFixed(2));
                 }
-                // setLoading(false);
+                
             } catch (error) {
                 console.error("Error fetching quiz history:", error);
-                // setLoading(false);
+                
             }
         };
 

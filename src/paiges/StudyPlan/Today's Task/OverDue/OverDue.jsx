@@ -5,11 +5,8 @@ import { useOutletContext } from 'react-router-dom';
 const OverDue = () => {
     const { tasks, handelTaskDelet, setOverdueTasks } = useOutletContext();
 
-    // ajkar tarik
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-
-    // overdue task filter kora
     const overdueTasks = tasks.filter(task => {
         if (!task.dueDate) return false;
         const due = new Date(task.dueDate);

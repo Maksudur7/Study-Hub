@@ -14,21 +14,20 @@ export default function SignIn() {
     const { loginUser, googleLogin } = useContext(AuthContext);
     const navigate = useNavigate();
 
-    // ✅ Handle login with email/password
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
 
         try {
-            await loginUser(email, password);
-            navigate("/"); // redirect after login
+            await e(email, password);
+            navigate("/"); 
         } catch (err) {
             console.error(err);
             setError("Invalid email or password");
         }
     };
 
-    // ✅ Handle login with Google
+    
     const handleGoogleLogin = async () => {
         try {
             await googleLogin();
@@ -74,7 +73,7 @@ export default function SignIn() {
                                 placeholder="student@university.edu"
                                 className="w-full p-2 outline-none"
                                 value={email}
-                                onChange={(e) => setEmail(e.target.value)} // ✅ bind state
+                                onChange={(e) => setEmail(e.target.value)} 
                                 required
                             />
                         </div>
@@ -90,7 +89,7 @@ export default function SignIn() {
                                 placeholder="Enter your password"
                                 className="w-full p-2 outline-none"
                                 value={password}
-                                onChange={(e) => setPassword(e.target.value)} // ✅ bind state
+                                onChange={(e) => setPassword(e.target.value)} 
                                 required
                             />
                             <button

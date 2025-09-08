@@ -17,7 +17,7 @@ const Budget = () => {
 
     const fetchData = async () => {
         try {
-            const res = await fetch("http://localhost:5000/addTranslation");
+            const res = await fetch("https://study-plan-backend-beta.vercel.app/addTranslation");
             const data = await res.json();
             const filterData = data.filter(e => e.email === user.email)
             setData(filterData)
@@ -38,7 +38,7 @@ const Budget = () => {
         fetchData();
     }, []);
 
-    // 🔹 form submit
+   
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -51,7 +51,7 @@ const Budget = () => {
         const translation = { type, amount, category, description, email };
 
         try {
-            const res = await fetch("http://localhost:5000/addTranslation", {
+            const res = await fetch("https://study-plan-backend-beta.vercel.app/addTranslation", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(translation),
@@ -142,8 +142,6 @@ const Budget = () => {
                     Transactions
                 </NavLink>
             </div>
-
-            {/* Monthly Progress */}
             <div>
                 <Outlet context={{ income: incomeData, expens: expenseData, transactions: data }} ></Outlet>
             </div>

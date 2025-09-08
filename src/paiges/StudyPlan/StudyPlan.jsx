@@ -16,7 +16,7 @@ const StudyPlan = () => {
 
     const handleKeyDown = (e) => {
         if (e.key === "Enter" && inputValue.trim() !== "") {
-            e.preventDefault(); // prevent form submit
+            e.preventDefault(); 
             setGoals([...goals, inputValue.trim()]);
             setInputValue("");
         }
@@ -28,11 +28,11 @@ const StudyPlan = () => {
 
     const fetchData = async () => {
         try {
-            const res = await fetch("http://localhost:5000/addTask");
+            const res = await fetch("https://study-plan-backend-beta.vercel.app/addTask");
             const result = await res.json();
             const taskFilter = result.filter(e => e.email === user.email)
             setTask(taskFilter);
-            // console.log('result is ', result);
+            
         } catch (err) {
             console.log(err);
         }
@@ -51,7 +51,7 @@ const StudyPlan = () => {
 
 
 
-        const res = await fetch('http://localhost:5000/addTask', {
+        const res = await fetch('https://study-plan-backend-beta.vercel.app/addTask', {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(formData)
@@ -71,7 +71,7 @@ const StudyPlan = () => {
 
     const handelTaskDelet = async (id) => {
         console.log(id);
-        const res = await fetch(`http://localhost:5000/addTask/${id}`, {
+        const res = await fetch(`https://study-plan-backend-beta.vercel.app/addTask/${id}`, {
             method: "DELETE",
         });
         const result = await res.json();
@@ -86,7 +86,7 @@ const StudyPlan = () => {
 
     const fetchGoleData = async () => {
         try {
-            const res = await fetch("http://localhost:5000/addGole");
+            const res = await fetch("https://study-plan-backend-beta.vercel.app/addGole");
             const result = await res.json();
             const goleFilter = result.filter(e => e.email === user.email)
             setGoleData(goleFilter);
@@ -107,7 +107,7 @@ const StudyPlan = () => {
             targetDate: e.target.targetDate.value,
             email: user.email
         };
-        const res = await fetch('http://localhost:5000/addGole', {
+        const res = await fetch('https://study-plan-backend-beta.vercel.app/addGole', {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(formData)
@@ -126,7 +126,7 @@ const StudyPlan = () => {
 
     const handelGoleDelet = async (id) => {
         console.log(id);
-        const res = await fetch(`http://localhost:5000/addGole/${id}`, {
+        const res = await fetch(`https://study-plan-backend-beta.vercel.app/addGole/${id}`, {
             method: "DELETE",
         });
         const result = await res.json();
@@ -144,7 +144,7 @@ const StudyPlan = () => {
     useEffect(() => {
         fetchData()
     }, [])
-    // Handle modal open/close
+    
 
     const openAddTask = () => setAddTaskOpen(true);
     const closeAddTask = () => setAddTaskOpen(false);
