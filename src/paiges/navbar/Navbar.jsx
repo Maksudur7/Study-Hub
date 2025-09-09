@@ -18,7 +18,7 @@ const Navbar = () => {
                             <div className="flex items-center gap-2">
                                 <p className="">{user?.displayName}</p>
                                 <img
-                                    className="rounded-full h-8 w-16 object-cover"
+                                    className="rounded-full h-14 w-16 object-cover"
                                     src={user?.photoURL || "/default-avatar.png"}
                                     alt="User Avatar"
                                 />

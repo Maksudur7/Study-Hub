@@ -2,36 +2,37 @@ import { useContext, useState } from "react";
 import { FaGraduationCap, FaLock } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import { FcGoogle } from "react-icons/fc";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "./AuthProvider";
 
 export default function SignIn() {
     const [showPassword, setShowPassword] = useState(false);
-    const [email, setEmail] = useState("");       
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [error, setError] = useState("");       
+    const [error, setError] = useState("");
 
     const { loginUser, googleLogin } = useContext(AuthContext);
     const navigate = useNavigate();
-
+    const location = useLocation()
+    console.log(location.pathname);
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
 
         try {
-            await e(email, password);
-            navigate("/"); 
+            await loginUser(email, password);
+            navigate(location?.state?.from?.pathname || '/');
         } catch (err) {
             console.error(err);
             setError("Invalid email or password");
         }
     };
 
-    
+
     const handleGoogleLogin = async () => {
         try {
             await googleLogin();
-            navigate("/");
+            navigate(location?.state?.from?.pathname || '/');
         } catch (err) {
             console.error(err);
             setError("Google sign-in failed");
@@ -73,7 +74,7 @@ export default function SignIn() {
                                 placeholder="student@university.edu"
                                 className="w-full p-2 outline-none"
                                 value={email}
-                                onChange={(e) => setEmail(e.target.value)} 
+                                onChange={(e) => setEmail(e.target.value)}
                                 required
                             />
                         </div>
@@ -89,7 +90,7 @@ export default function SignIn() {
                                 placeholder="Enter your password"
                                 className="w-full p-2 outline-none"
                                 value={password}
-                                onChange={(e) => setPassword(e.target.value)} 
+                                onChange={(e) => setPassword(e.target.value)}
                                 required
                             />
                             <button

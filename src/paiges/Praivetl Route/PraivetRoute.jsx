@@ -2,14 +2,16 @@ import React, { useContext } from 'react';
 import { AuthContext } from '../Authintaction paige/AuthProvider';
 import { Navigate, useLocation } from 'react-router-dom';
 
-const PraivetRoute = ({ children }) => {
-    const location = useLocation()
-    const { users } = useContext(AuthContext)
-    
-    if (users) {
-        return children
+const PrivateRoute = ({ children }) => {
+    const location = useLocation();
+    const { user } = useContext(AuthContext);
+
+    if (user) {
+        return children;
     }
-    return <Navigate state={location.pathname} to={`/signin`}></Navigate>;
+
+    // Pass the current location in state.from
+    return <Navigate to="/signin" state={{ from: location }} replace />;
 };
 
-export default PraivetRoute;
+export default PrivateRoute;

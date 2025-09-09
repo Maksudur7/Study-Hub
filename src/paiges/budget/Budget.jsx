@@ -22,11 +22,11 @@ const Budget = () => {
             const filterData = data.filter(e => e.email === user.email)
             setData(filterData)
 
-            const incomeItems = data.filter((t) => t.type === "income");
+            const incomeItems = filterData.filter((t) => t.type === "income");
             const totalIncome = incomeItems.reduce((sum, item) => sum + Number(item.amount), 0);
             setIncomeData(totalIncome);
 
-            const expenseItems = data.filter((t) => t.type === "expense");
+            const expenseItems = filterData.filter((t) => t.type === "expense");
             const totalExpense = expenseItems.reduce((sum, item) => sum + Number(item.amount), 0);
             setExpenseData(totalExpense);
         } catch (err) {

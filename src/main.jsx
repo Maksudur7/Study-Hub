@@ -24,6 +24,7 @@ import AuthProvider from './paiges/Authintaction paige/AuthProvider.jsx';
 import TodayTask from './paiges/StudyPlan/Today\'s Task/TodayTask.jsx';
 import OverDue from './paiges/StudyPlan/Today\'s Task/OverDue/OverDue.jsx';
 import ActiveGole from './paiges/StudyPlan/Active Gole/ActiveGole.jsx';
+import PraivetRoute from './paiges/Praivetl Route/PraivetRoute.jsx';
 
 
 const router = createBrowserRouter([
@@ -37,11 +38,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/schedule",
-        element: <Schedule></Schedule>
+        element: <PraivetRoute><Schedule></Schedule></PraivetRoute>
       },
       {
         path: '/budget',
-        element: <Budget></Budget>,
+        element: <PraivetRoute><Budget></Budget></PraivetRoute> ,
         children: [
           {
             path: '/budget',
@@ -59,7 +60,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/examQustion',
-        element: <ExamQustion></ExamQustion>,
+        element: <PraivetRoute><ExamQustion></ExamQustion></PraivetRoute> ,
         children: [
           {
             path: '/examQustion',
@@ -81,7 +82,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/studyPlan',
-        element: <StudyPlan></StudyPlan>,
+        element: <PraivetRoute><StudyPlan></StudyPlan></PraivetRoute> ,
         children:[
           {
             path: '/studyPlan',
