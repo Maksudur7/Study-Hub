@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { FaGraduationCap, FaLock } from "react-icons/fa";
-import { MdEmail, MdSchool } from "react-icons/md";
+import { MdEmail } from "react-icons/md";
 import { BsPersonFill } from "react-icons/bs";
 import { FcGoogle } from "react-icons/fc";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -9,8 +9,9 @@ import { AuthContext } from "./AuthProvider";
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const { createUser  } = useContext(AuthContext);
-  const Navigate = useNavigate()
+  const { createUser } = useContext(AuthContext);
+  const Navigate = useNavigate();
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const firstName = e.target.firstName.value;
@@ -19,8 +20,6 @@ const SignUp = () => {
     const password = e.target.password.value;
     const confirmPassword = e.target.confirmPassword.value;
 
-
-    console.log(firstName, lastName, email, password, confirmPassword);
     if (password !== confirmPassword) {
       alert("Passwords do not match!");
       return;
@@ -28,11 +27,9 @@ const SignUp = () => {
 
     createUser(email, password)
       .then((result) => {
-        console.log("User created:", result.user);
         if (result.user) {
-          Navigate(location?.state ? location?.state : '/')
+          Navigate(location?.state ? location?.state : "/");
         }
-        
       })
       .catch((error) => {
         console.error("Error creating user:", error.message);
@@ -40,22 +37,26 @@ const SignUp = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-b from-green-300 to-green-100">
+    <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-b from-green-300 to-green-100 px-4 sm:px-6 lg:px-8">
       {/* Header */}
-      <div className="flex flex-col items-center mb-6">
+      <div className="flex flex-col items-center mb-6 text-center">
         <div className="bg-gray-100 p-3 rounded-full shadow-sm">
-          <FaGraduationCap className="text-gray-700 text-2xl" />
+          <FaGraduationCap className="text-gray-700 text-2xl sm:text-3xl" />
         </div>
-        <h1 className="text-2xl font-semibold mt-3">Join Student Hub</h1>
-        <p className="text-gray-500 text-sm">
+        <h1 className="text-2xl sm:text-3xl font-semibold mt-3">
+          Join Student Hub
+        </h1>
+        <p className="text-gray-600 text-sm sm:text-base">
           Create your account and connect with students worldwide
         </p>
       </div>
 
       {/* Card */}
-      <div className="bg-white shadow-md rounded-xl p-8 w-full max-w-lg">
-        <h2 className="text-xl font-semibold text-center mb-6">Create Account</h2>
-        <p className="text-gray-500 text-center text-sm mb-6">
+      <div className="bg-white shadow-md rounded-xl p-6 sm:p-8 w-full max-w-sm sm:max-w-md md:max-w-lg">
+        <h2 className="text-xl sm:text-2xl font-semibold text-center mb-4 sm:mb-6">
+          Create Account
+        </h2>
+        <p className="text-gray-500 text-center text-sm sm:text-base mb-6">
           Fill your details, sign up, and get started
         </p>
 
@@ -63,24 +64,24 @@ const SignUp = () => {
           {/* Name */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
             <div className="flex items-center border rounded-lg px-3">
-              <BsPersonFill className="text-gray-400 mr-2" />
+              <BsPersonFill className="text-gray-400 mr-2 text-lg" />
               <input
                 id="firstName"
                 name="firstName"
                 type="text"
                 placeholder="First Name"
-                className="w-full p-2 outline-none"
+                className="w-full p-2 outline-none text-sm sm:text-base"
                 required
               />
             </div>
             <div className="flex items-center border rounded-lg px-3">
-              <BsPersonFill className="text-gray-400 mr-2" />
+              <BsPersonFill className="text-gray-400 mr-2 text-lg" />
               <input
                 id="lastName"
                 name="lastName"
                 type="text"
                 placeholder="Last Name"
-                className="w-full p-2 outline-none"
+                className="w-full p-2 outline-none text-sm sm:text-base"
                 required
               />
             </div>
@@ -88,23 +89,23 @@ const SignUp = () => {
 
           {/* Email */}
           <div className="flex items-center border rounded-lg px-3 mb-4">
-            <MdEmail className="text-gray-400 mr-2" />
+            <MdEmail className="text-gray-400 mr-2 text-lg" />
             <input
               id="email"
               name="email"
               type="email"
               placeholder="student@university.edu"
-              className="w-full p-2 outline-none"
+              className="w-full p-2 outline-none text-sm sm:text-base"
               required
             />
           </div>
 
-          {/* University, Major, Year */}
+          {/* University, Year */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
             <select
               id="university"
               name="university"
-              className="border rounded-lg p-2 w-full"
+              className="border rounded-lg p-2 w-full text-sm sm:text-base"
               required
             >
               <option value="">Select your university</option>
@@ -116,7 +117,7 @@ const SignUp = () => {
             <select
               id="year"
               name="year"
-              className="border rounded-lg p-2 w-full"
+              className="border rounded-lg p-2 w-full text-sm sm:text-base"
               required
             >
               <option value="">Select year</option>
@@ -127,11 +128,12 @@ const SignUp = () => {
             </select>
           </div>
 
+          {/* Major */}
           <div className="mb-4">
             <select
               id="major"
               name="major"
-              className="border rounded-lg p-2 w-full"
+              className="border rounded-lg p-2 w-full text-sm sm:text-base"
               required
             >
               <option value="">Select major</option>
@@ -143,19 +145,19 @@ const SignUp = () => {
 
           {/* Password */}
           <div className="flex items-center border rounded-lg px-3 mb-4">
-            <FaLock className="text-gray-400 mr-2" />
+            <FaLock className="text-gray-400 mr-2 text-lg" />
             <input
               id="password"
               name="password"
               type={showPassword ? "text" : "password"}
               placeholder="Create a strong password"
-              className="w-full p-2 outline-none"
+              className="w-full p-2 outline-none text-sm sm:text-base"
               required
               minLength={6}
             />
             <button
               type="button"
-              className="text-gray-400 text-sm"
+              className="text-gray-400 text-sm ml-2"
               onClick={() => setShowPassword(!showPassword)}
             >
               {showPassword ? "🙈" : "👁️"}
@@ -164,34 +166,36 @@ const SignUp = () => {
 
           {/* Confirm Password */}
           <div className="flex items-center border rounded-lg px-3 mb-4">
-            <FaLock className="text-gray-400 mr-2" />
+            <FaLock className="text-gray-400 mr-2 text-lg" />
             <input
               id="confirmPassword"
               name="confirmPassword"
               type={showConfirmPassword ? "text" : "password"}
               placeholder="Confirm your password"
-              className="w-full p-2 outline-none"
+              className="w-full p-2 outline-none text-sm sm:text-base"
               required
               minLength={6}
             />
             <button
               type="button"
-              className="text-gray-400 text-sm"
-              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              className="text-gray-400 text-sm ml-2"
+              onClick={() =>
+                setShowConfirmPassword(!showConfirmPassword)
+              }
             >
               {showConfirmPassword ? "🙈" : "👁️"}
             </button>
           </div>
 
           {/* Checkboxes */}
-          <div className="flex items-center mb-2">
-            <input type="checkbox" id="terms" className="mr-2" required />
+          <div className="flex items-start gap-2 mb-2">
+            <input type="checkbox" id="terms" className="mt-1" required />
             <label htmlFor="terms" className="text-sm text-gray-600">
               I agree to the Terms of Service and Privacy Policy
             </label>
           </div>
-          <div className="flex items-center mb-4">
-            <input type="checkbox" id="newsletter" className="mr-2" />
+          <div className="flex items-start gap-2 mb-4">
+            <input type="checkbox" id="newsletter" className="mt-1" />
             <label htmlFor="newsletter" className="text-sm text-gray-600">
               Subscribe to our newsletter for study tips & updates
             </label>
@@ -208,23 +212,26 @@ const SignUp = () => {
           {/* Divider */}
           <div className="flex items-center my-6">
             <hr className="flex-grow border-gray-300" />
-            <span className="mx-2 text-gray-400 text-sm">OR</span>
+            <span className="mx-2 text-gray-400 text-xs sm:text-sm">OR</span>
             <hr className="flex-grow border-gray-300" />
           </div>
 
           {/* Google Button */}
           <button
             type="button"
-            className="w-full flex items-center justify-center gap-2 border rounded-lg py-2 hover:bg-gray-50 transition"
+            className="w-full flex items-center justify-center gap-2 border rounded-lg py-2 hover:bg-gray-50 transition text-sm sm:text-base"
           >
             <FcGoogle className="text-xl" />
             Continue with University Login
           </button>
 
           {/* Already Have Account */}
-          <p className="text-center text-sm text-gray-500 mt-6">
+          <p className="text-center text-sm sm:text-base text-gray-500 mt-6">
             Already have an account?{" "}
-            <NavLink to="/signin" className="text-black font-medium hover:underline">
+            <NavLink
+              to="/signin"
+              className="text-black font-medium hover:underline"
+            >
               Sign in
             </NavLink>
           </p>
@@ -232,9 +239,11 @@ const SignUp = () => {
       </div>
 
       {/* What you’ll get */}
-      <div className="bg-white shadow-md rounded-xl p-6 w-full max-w-lg mt-6">
-        <h3 className="font-semibold mb-4">What you’ll get:</h3>
-        <ul className="space-y-2 text-sm text-gray-600">
+      <div className="bg-white shadow-md rounded-xl p-6 w-full max-w-sm sm:max-w-md md:max-w-lg mt-6">
+        <h3 className="font-semibold mb-4 text-base sm:text-lg">
+          What you’ll get:
+        </h3>
+        <ul className="space-y-2 text-sm sm:text-base text-gray-600">
           <li>✅ Access to study groups and collaboration tools</li>
           <li>✅ Personalized academic resources and recommendations</li>
           <li>✅ Connect with students from your university</li>

@@ -6,10 +6,10 @@ const Question = () => {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [questionIndex, setQuestionIndex] = useState(0);
   const [qustionData, setQustionData] = useState([]);
-  const [userAnswers, setUserAnswers] = useState([]); 
+  const [userAnswers, setUserAnswers] = useState([]);
   const [showResult, setShowResult] = useState(false);
   const [score, setScore] = useState(0);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     const savedQuiz = localStorage.getItem("quizData");
@@ -21,9 +21,7 @@ const Question = () => {
 
   const currentQuestion = qustionData[questionIndex];
 
-  const handleOptionClick = (answer) => {
-    setSelectedAnswer(answer);
-  };
+  const handleOptionClick = (answer) => setSelectedAnswer(answer);
 
   const handleNext = () => {
     const updatedAnswers = [...userAnswers];
@@ -31,14 +29,14 @@ const Question = () => {
     setUserAnswers(updatedAnswers);
 
     if (questionIndex < qustionData.length - 1) {
-      setQuestionIndex((prev) => prev + 1);
-      setSelectedAnswer(updatedAnswers[questionIndex + 1]); 
+      setQuestionIndex(prev => prev + 1);
+      setSelectedAnswer(updatedAnswers[questionIndex + 1]);
     }
   };
 
   const handlePrev = () => {
     if (questionIndex > 0) {
-      setQuestionIndex((prev) => prev - 1);
+      setQuestionIndex(prev => prev - 1);
       setSelectedAnswer(userAnswers[questionIndex - 1]);
     }
   };
@@ -50,79 +48,61 @@ const Question = () => {
     let correctCount = 0;
     updatedAnswers.forEach((ans, idx) => {
       if (!ans) return;
-      const correctLetter = qustionData[idx].answer; 
+      const correctLetter = qustionData[idx].answer;
       const correctOption = qustionData[idx].options[letterToIndex(correctLetter)];
-      if (ans === correctOption) {
-        correctCount++;
-      }
+      if (ans === correctOption) correctCount++;
     });
-
 
     const id = localStorage?.getItem("quizId");
-    console.log(score);
-    const quizId = JSON?.parse(id)
+    const quizId = JSON?.parse(id);
+    const date = new Date().toLocaleTimeString();
 
-    const date = new Date().toLocaleTimeString()
-    const res = await fetch(`https://study-plan-backend-beta.vercel.app/quizData/${quizId}`, {
+    await fetch(`https://study-plan-backend-beta.vercel.app/quizData/${quizId}`, {
       method: "PATCH",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        date: date,
-        score: correctCount
-      })
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ date, score: correctCount }),
     });
-
-    console.log(res);
 
     setUserAnswers(updatedAnswers);
     setScore(correctCount);
     setShowResult(true);
   };
 
-  const letterToIndex = (letter) => {
-    const map = { A: 0, B: 1, C: 2, D: 3 };
-    return map[letter];
-  };
+  const letterToIndex = (letter) => ({ A: 0, B: 1, C: 2, D: 3 }[letter]);
 
   if (showResult) {
     localStorage.setItem("Score", JSON.stringify(score));
-    navigate('/examQustion/quiz')
-
+    navigate('/examQustion/quiz');
   }
 
-
-
   return (
-    <div className="bg-gray-100 flex justify-center items-center">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full">
-        {/* Progress Bar and Question Title */}
-        <div className="flex justify-between items-center mb-6">
+    <div className="bg-gray-100 min-h-screen flex justify-center items-start p-4 md:p-10">
+      <div className="bg-white w-full max-w-3xl p-6 md:p-10 rounded-lg shadow-lg">
+        
+        {/* Progress Bar and Question */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
           <div className="text-sm text-gray-500">
             Question {questionIndex + 1} of {qustionData.length}
           </div>
-        </div>
-
-        {/* Progress Bar */}
-        <div className="w-full bg-gray-200 rounded-full h-2 mb-6">
-          <div
-            className="h-2 bg-purple-600 rounded-full"
-            style={{ width: `${((questionIndex + 1) / qustionData.length) * 100}%` }}
-          ></div>
+          <div className="w-full md:w-1/2 bg-gray-200 rounded-full h-2 mt-2 md:mt-0">
+            <div
+              className="h-2 bg-purple-600 rounded-full"
+              style={{ width: `${((questionIndex + 1) / qustionData.length) * 100}%` }}
+            ></div>
+          </div>
         </div>
 
         {/* Question */}
-        <h2 className="text-xl font-semibold text-gray-700 mb-6">
+        <h2 className="text-xl md:text-2xl font-semibold text-gray-700 mb-6">
           {currentQuestion?.question}
         </h2>
 
         {/* Options */}
-        <div className="space-y-4">
+        <div className="grid grid-cols-1 gap-4">
           {currentQuestion?.options.map((option, index) => (
             <div
               key={index}
-              className={`p-4 border rounded-lg cursor-pointer transition-all 
+              className={`p-4 border rounded-lg cursor-pointer transition-all flex items-center gap-3
                 ${selectedAnswer === option ? 'border-purple-600 bg-purple-50' : 'border-gray-300'}`}
               onClick={() => handleOptionClick(option)}
             >
@@ -135,40 +115,42 @@ const Question = () => {
                 onChange={() => handleOptionClick(option)}
                 className="mr-3"
               />
-              <label htmlFor={`option-${index}`} className="text-lg">{option}</label>
+              <label htmlFor={`option-${index}`} className="text-lg md:text-xl">{option}</label>
             </div>
           ))}
         </div>
 
         {/* Navigation Buttons */}
-        <div className="mt-6 flex justify-between items-center">
+        <div className="mt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
           <button
             onClick={handlePrev}
             disabled={questionIndex === 0}
-            className="bg-gray-300 text-gray-700 py-2 px-4 rounded-lg flex items-center gap-2 disabled:opacity-50"
+            className="bg-gray-300 text-gray-700 py-2 px-4 rounded-lg w-full sm:w-auto disabled:opacity-50"
           >
-            <span className="text-sm">Previous</span>
+            Previous
           </button>
 
           {questionIndex === qustionData.length - 1 ? (
             <button
               onClick={handleFinishQuiz}
-              className={`bg-purple-600 text-white py-2 px-6 rounded-lg hover:bg-purple-700 flex items-center justify-center gap-2 ${!selectedAnswer ? 'opacity-50 cursor-not-allowed' : ''}`}
               disabled={!selectedAnswer}
+              className={`bg-purple-600 text-white py-2 px-6 rounded-lg w-full sm:w-auto hover:bg-purple-700 flex items-center justify-center gap-2
+                ${!selectedAnswer ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
-              Finish Quiz
-              <CheckCircle size={20} />
+              Finish Quiz <CheckCircle size={20} />
             </button>
           ) : (
             <button
               onClick={handleNext}
-              className={`bg-purple-600 text-white py-2 px-6 rounded-lg hover:bg-purple-700 flex items-center justify-center gap-2 ${!selectedAnswer ? 'opacity-50 cursor-not-allowed' : ''}`}
               disabled={!selectedAnswer}
+              className={`bg-purple-600 text-white py-2 px-6 rounded-lg w-full sm:w-auto hover:bg-purple-700 flex items-center justify-center gap-2
+                ${!selectedAnswer ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               Next
             </button>
           )}
         </div>
+
       </div>
     </div>
   );

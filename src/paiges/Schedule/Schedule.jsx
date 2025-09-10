@@ -3,6 +3,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Swal from 'sweetalert2';
 import { AuthContext } from '../Authintaction paige/AuthProvider';
+import { FiMenu } from 'react-icons/fi';
 
 const colors = [
     "from-blue-400 to-blue-600",
@@ -17,27 +18,24 @@ const Schedule = () => {
     const [classes, setClasses] = useState([]);
     const [allClasses, setAllClasses] = useState([]);
     const [selectedDay, setSelectedDay] = useState("today");
-    const { user } = useContext(AuthContext)
-
+    const [mobileNavOpen, setMobileNavOpen] = useState(false);
+    const { user } = useContext(AuthContext);
 
     const todayName = new Date().toLocaleDateString("en-US", { weekday: "long" });
-
 
     useEffect(() => {
         fetch("https://study-plan-backend-beta.vercel.app/studentHub")
             .then(res => res.json())
             .then(data => {
-                const emailAuth = data.filter(valure => valure?.email === user?.email)
-                console.log(emailAuth);
+                const emailAuth = data.filter(valure => valure?.email === user?.email);
                 setAllClasses(emailAuth);
             })
             .catch(err => console.error("Error fetching classes:", err));
     }, [user]);
 
-    const [todayClass, setTodayClass] = useState('')
+    const [todayClass, setTodayClass] = useState('');
     useEffect(() => {
         let filteredClasses = allClasses;
-
 
         const now = new Date();
         filteredClasses = filteredClasses.filter(cls => {
@@ -56,7 +54,6 @@ const Schedule = () => {
         }
     }, [selectedDay, allClasses, todayName]);
 
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         const className = e.target.className.value;
@@ -64,17 +61,9 @@ const Schedule = () => {
         const time = e.target.time.value;
         const location = e.target.location.value;
         const professor = e.target.professor.value;
-        const email = user?.email
+        const email = user?.email;
 
-        const newClass = {
-            className,
-            email,
-            day,
-            time,
-            location,
-            professor,
-            createdAt: new Date()
-        };
+        const newClass = { className, email, day, time, location, professor, createdAt: new Date() };
 
         try {
             const res = await fetch("https://study-plan-backend-beta.vercel.app/studentHub", {
@@ -86,8 +75,6 @@ const Schedule = () => {
             if (res.ok) {
                 Swal.fire("Success", "Class added successfully!", "success");
                 toast.success("Class added successfully!");
-
-
                 const updated = await res.json();
                 setAllClasses(prev => [...prev, updated]);
             }
@@ -96,7 +83,6 @@ const Schedule = () => {
             toast.error("Error adding class");
         }
     };
-
 
     const handleClick = () => {
         toast.info(
@@ -108,8 +94,8 @@ const Schedule = () => {
                         <input type="text" id="className" name='className' className="w-full mt-1 p-2 border border-gray-300 rounded-md" placeholder="e.g., Mathematics" />
                     </div>
 
-                    <div className='flex place-content-between'>
-                        <div className="mt-4">
+                    <div className='flex flex-col sm:flex-row sm:justify-between gap-4 mt-4'>
+                        <div className="w-full sm:w-1/2">
                             <label htmlFor="day" className="block text-sm font-medium text-gray-700">Day</label>
                             <select id="day" name='day' className="w-full mt-1 p-2 border border-gray-300 rounded-md">
                                 <option value="">Select day</option>
@@ -121,7 +107,7 @@ const Schedule = () => {
                             </select>
                         </div>
 
-                        <div className="mt-4">
+                        <div className="w-full sm:w-1/2">
                             <label htmlFor="time" className="block text-sm font-medium text-gray-700">Time</label>
                             <input type="time" id="time" name='time' className="w-full mt-1 p-2 border border-gray-300 rounded-md" />
                         </div>
@@ -165,23 +151,13 @@ const Schedule = () => {
         { name: "Thursday", value: "Thursday" },
     ];
 
-
     return (
-        <div className="app-container mx-14" style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
-            <header className=' mb-10'>
-                <h1 className='text-4xl mb-5'>📅 <strong>Class Schedule Tracker</strong></h1>
-                <p className='text-gray-500'>Never miss a class again! 📚</p>
+        <div className="app-container mx-14 p-4 md:p-6">
+            <header className='mb-10 flex flex-col md:flex-row md:items-center md:justify-between'>
+                <h1 className='text-4xl mb-5 md:mb-0'>📅 <strong>Class Schedule Tracker</strong></h1>
                 <button
-                    className='-mt-20'
+                    className='bg-blue-500 text-white px-4 py-2 rounded-md md:ml-4'
                     onClick={handleClick}
-                    style={{
-                        float: "right",
-                        backgroundColor: "#007bff",
-                        color: "#fff",
-                        padding: "8px 12px",
-                        border: "none",
-                        borderRadius: "5px"
-                    }}
                 >
                     + Add New Class
                 </button>
@@ -190,15 +166,15 @@ const Schedule = () => {
             <ToastContainer />
 
             {/* Tabs */}
-            <div className="bg-white p-4 inline-flex rounded-lg shadow-lg  mb-8">
-                <div className="flex border-gray-200">
+            <div className="bg-white p-4 rounded-lg shadow-lg mb-8 overflow-x-auto">
+                <div className="flex gap-2 md:justify-start">
                     {tabs.map((tab) => (
                         <button
                             key={tab.value}
                             onClick={() => setSelectedDay(tab.value)}
-                            className={`py-2 px-4 text-sm font-medium rounded-full 
-                ${selectedDay === tab.value ? 'bg-gray-200 text-gray-800' : 'text-gray-500 hover:bg-gray-100'} 
-                focus:outline-none`}
+                            className={`py-2 px-4 text-sm font-medium whitespace-nowrap rounded-full
+                                ${selectedDay === tab.value ? 'bg-gray-200 text-gray-800' : 'text-gray-500 hover:bg-gray-100'}
+                                focus:outline-none`}
                         >
                             {tab.name}
                         </button>
@@ -208,72 +184,53 @@ const Schedule = () => {
 
             {/* Class Cards */}
             {classes.length === 0 ? (
-                <div className=" flex bg-white    rounded-lg shadow-lg  text-center h-40 w-full mb-8 justify-center items-center p-10">
-                    <div className="">
-                        <h2 className="text-3xl font-bold text-purple-700">
-                            Hurra! There are no classes today 🎉
-                        </h2>
-                    </div>
-
+                <div className="flex bg-white rounded-lg shadow-lg text-center h-40 w-full mb-8 justify-center items-center p-4">
+                    <h2 className="text-2xl md:text-3xl font-bold text-purple-700">
+                        Hurra! There are no classes today 🎉
+                    </h2>
                 </div>
             ) : (
                 classes.map((cls, index) => (
                     <div
                         key={cls._id}
-                        className="class-card flex bg-white"
-                        style={{
-                            padding: "15px",
-                            border: "1px solid #ccc",
-                            borderRadius: "10px",
-                            marginBottom: "10px"
-                        }}
+                        className="class-card flex gap-3 sm:flex-row bg-white rounded-lg shadow-lg mb-4 p-4"
                     >
-                        <div className="items-start mr-5 inline-flex">
+                        <div className="items-start mr-0 sm:mr-5 mb-3 sm:mb-0 inline-flex">
                             <div
-                                className={`w-1 h-20 rounded-full bg-gradient-to-b ${colors[index % colors.length]
-                                    }`}
+                                className={`w-1 h-20 rounded-full bg-gradient-to-b ${colors[index % colors.length]}`}
                             ></div>
                         </div>
                         <div>
-                            <h3 style={{ color: "#1e90ff" }}>
-                                <span className="font-bold text-2xl">{cls.className}</span>
-                                <span
-                                    className="border-1 ml-5 border-black"
-                                    style={{
-                                        backgroundColor: "#f0f0f0",
-                                        padding: "2px 6px",
-                                        borderRadius: "4px"
-                                    }}
-                                >
-                                    {cls.day}
-                                </span>
+                            <h3 style={{ color: "#1e90ff" }} className="flex flex-col sm:flex-row sm:items-center gap-2">
+                                <span className="font-bold text-xl md:text-2xl">{cls.className}</span>
+                                <span className="border px-2 py-1 rounded bg-gray-100">{cls.day}</span>
                             </h3>
-                            <p className="py-5">🕒 {cls.time} | 📍 {cls.location}</p>
+                            <p className="py-2 md:py-5 text-sm md:text-base">🕒 {cls.time} | 📍 {cls.location}</p>
                             <p>Professor: {cls.professor}</p>
                         </div>
                     </div>
                 ))
             )}
 
-
-            <div className="summary" style={{ display: "flex", gap: "20px" }}>
-                <div style={{ flex: 1, backgroundColor: "#1e90ff", color: "#fff", padding: "20px", borderRadius: "10px" }}>
+            {/* Summary Section */}
+            <div className="summary flex flex-col md:flex-row gap-4">
+                <div className="flex-1 bg-blue-600 text-white p-4 rounded-lg">
                     <h4>Today's Classes</h4>
-                    <p className='pt-8 pb-3' style={{ fontSize: "24px", fontWeight: "bold" }}>{todayClass.length}</p>
+                    <p className='pt-4 pb-2 text-2xl font-bold'>{todayClass.length}</p>
                     <p>Classes scheduled for today</p>
                 </div>
-                <div style={{ flex: 1, backgroundColor: "#28a745", color: "#fff", padding: "20px", borderRadius: "10px" }}>
+                <div className="flex-1 bg-green-600 text-white p-4 rounded-lg">
                     <h4>This Week</h4>
-                    <p className='pt-8 pb-3' style={{ fontSize: "24px", fontWeight: "bold" }}>{allClasses.length}</p>
+                    <p className='pt-4 pb-2 text-2xl font-bold'>{allClasses.length}</p>
                     <p>Total classes this week</p>
                 </div>
-                <div style={{ flex: 1, backgroundColor: "#a020f0", color: "#fff", padding: "20px", borderRadius: "10px" }}>
+                <div className="flex-1 bg-purple-600 text-white p-4 rounded-lg">
                     <h4>Attendance</h4>
-                    <p className='pt-8 pb-3' style={{ fontSize: "24px", fontWeight: "bold" }}>92%</p>
+                    <p className='pt-4 pb-2 text-2xl font-bold'>92%</p>
                     <p>Average attendance rate</p>
                 </div>
             </div>
-        </div >
+        </div>
     );
 };
 

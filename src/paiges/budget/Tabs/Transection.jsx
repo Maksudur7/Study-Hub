@@ -12,9 +12,9 @@ const categoryIcons = {
 
 const Transection = () => {
     const { transactions } = useOutletContext();
-    console.log(transactions);
+
     return (
-        <div className="min-h-screen p-6">
+        <div className="min-h-screen px-4 md:px-14 py-6">
             <h1 className="text-2xl font-bold mb-6">Transactions</h1>
 
             <div className="space-y-4">
@@ -22,24 +22,19 @@ const Transection = () => {
                     transactions.map((transaction, index) => {
                         const icon =
                             categoryIcons[transaction.category?.toLowerCase()] ||
-                            <DollarSign className="text-gray-500" />; 
+                            <DollarSign className="text-gray-500" />;
 
                         return (
                             <div
                                 key={index}
-                                className="bg-white p-4 rounded-lg shadow flex justify-between items-center"
+                                className="bg-white p-4 rounded-lg shadow flex flex-col md:flex-row md:justify-between md:items-center gap-4"
                             >
-                                
                                 <div className="flex items-center gap-4">
                                     <div className="p-2 rounded-full bg-gray-100">{icon}</div>
                                     <div>
-                                       
                                         <div className="font-semibold text-gray-800">
-                                            {transaction?.
-description
- || "Untitled"}
+                                            {transaction?.description || "Untitled"}
                                         </div>
-                                        
                                         <div className="text-sm text-gray-500">
                                             {transaction.category || "Unknown"} •{" "}
                                             {transaction.date || "No date"}
@@ -47,23 +42,24 @@ description
                                     </div>
                                 </div>
 
-                                
                                 <div className="text-right">
                                     <div
-                                        className={`font-semibold ${transaction.type === "expense"
+                                        className={`font-semibold ${
+                                            transaction.type === "expense"
                                                 ? "text-red-600"
                                                 : "text-green-600"
-                                            }`}
+                                        }`}
                                     >
                                         {transaction.type === "expense" ? "-" : "+"}${Math.abs(
                                             transaction.amount || 0
                                         ).toFixed(2)}
                                     </div>
                                     <div
-                                        className={`text-xs ${transaction.type === "expense"
+                                        className={`text-xs ${
+                                            transaction.type === "expense"
                                                 ? "text-red-500"
                                                 : "text-green-500"
-                                            }`}
+                                        }`}
                                     >
                                         {transaction.type || "N/A"}
                                     </div>

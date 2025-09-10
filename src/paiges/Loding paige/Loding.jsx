@@ -4,7 +4,8 @@ import { BookOpen } from "lucide-react";
 
 const Loding = () => {
     return (
-        <div className="h-screen flex flex-col items-center justify-center  text-black">
+        <div className="h-screen flex flex-col items-center justify-center text-black px-4 sm:px-6">
+            
             {/* Animated Icon */}
             <motion.div
                 initial={{ scale: 0 }}
@@ -19,12 +20,12 @@ const Loding = () => {
                 }}
                 className="mb-6"
             >
-                <BookOpen size={80} />
+                <BookOpen className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28" />
             </motion.div>
 
             {/* Loading Text */}
             <motion.h1
-                className="text-3xl font-bold mb-2"
+                className="text-xl sm:text-2xl md:text-3xl font-bold mb-2 text-center"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
@@ -41,7 +42,7 @@ const Loding = () => {
                 {[0, 1, 2].map((dot) => (
                     <motion.span
                         key={dot}
-                        className="w-3 h-3 bg-black rounded-full"
+                        className="w-3 h-3 sm:w-4 sm:h-4 bg-black rounded-full"
                         animate={{ y: [0, -8, 0] }}
                         transition={{
                             duration: 0.6,

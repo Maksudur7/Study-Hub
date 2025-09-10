@@ -51,7 +51,7 @@ const Overview = () => {
         <div className="p-6 mx-14 min-h-screen">
 
             {/* Top Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                 <StatCard 
                     title="Total Classes This Week" 
                     value={schedule.length} 
@@ -71,7 +71,7 @@ const Overview = () => {
                     value={`${tasks.length}/${goals.length}`} 
                     color="orange-600" 
                     emoji="🧠" 
-                    progress={goals.length ? (tasks.length / goals.length) * 100 : 0} 
+                    progress={goals.length ? ((tasks.length + goals.length)/2) *10 : 0} 
                 />
                 <StatCard 
                     title="Quiz Score" 
@@ -82,7 +82,7 @@ const Overview = () => {
             </div>
 
             {/* Main Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                 <DynamicCard 
                     to="/schedule" 
                     bgColor="blue" 

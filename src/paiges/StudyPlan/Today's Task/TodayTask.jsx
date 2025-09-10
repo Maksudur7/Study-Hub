@@ -86,7 +86,7 @@ const TodayTask = () => {
                                 </div>
                             </div>
 
-                            <div className="flex justify-between items-center">
+                            <div className="flex justify-between flex-col gap-3 md:flex-row items-center">
                                 <span className={`text-sm ${task.priority === 'High' ? 'text-red-600' : 'text-gray-600'}`}>{task.priority} Priority</span>
                                 <div className="flex items-center gap-4">
                                     <button onClick={() => openAddEdit(task)} className="text-blue-500 hover:underline cursor-pointer flex items-center gap-2">
