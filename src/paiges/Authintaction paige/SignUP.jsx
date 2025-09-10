@@ -9,7 +9,7 @@ import { AuthContext } from "./AuthProvider";
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const { createUser } = useContext(AuthContext);
+  const { createUser, googleLogin } = useContext(AuthContext);
   const Navigate = useNavigate();
 
   const handleSubmit = (e) => {
@@ -34,6 +34,15 @@ const SignUp = () => {
       .catch((error) => {
         console.error("Error creating user:", error.message);
       });
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      await googleLogin();
+      Navigate(location?.state?.from?.pathname || "/");
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -218,8 +227,9 @@ const SignUp = () => {
 
           {/* Google Button */}
           <button
+            onClick={handleGoogleLogin}
             type="button"
-            className="w-full flex items-center justify-center gap-2 border rounded-lg py-2 hover:bg-gray-50 transition text-sm sm:text-base"
+            className="w-full flex items-center cursor-pointer justify-center gap-2 border rounded-lg py-2 hover:bg-gray-50 transition text-sm sm:text-base"
           >
             <FcGoogle className="text-xl" />
             Continue with University Login

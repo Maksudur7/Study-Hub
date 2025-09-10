@@ -113,7 +113,6 @@ const Navbar = () => {
                 </div>
             </div>
 
-            {/* Overlay */}
             {drawerOpen && <div className="fixed inset-0 bg-black opacity-30 z-40" onClick={toggleDrawer}></div>}        </div>
     );
 };

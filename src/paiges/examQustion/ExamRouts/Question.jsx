@@ -78,8 +78,6 @@ const Question = () => {
   return (
     <div className="bg-gray-100 min-h-screen flex justify-center items-start p-4 md:p-10">
       <div className="bg-white w-full max-w-3xl p-6 md:p-10 rounded-lg shadow-lg">
-        
-        {/* Progress Bar and Question */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
           <div className="text-sm text-gray-500">
             Question {questionIndex + 1} of {qustionData.length}
@@ -91,13 +89,9 @@ const Question = () => {
             ></div>
           </div>
         </div>
-
-        {/* Question */}
         <h2 className="text-xl md:text-2xl font-semibold text-gray-700 mb-6">
           {currentQuestion?.question}
         </h2>
-
-        {/* Options */}
         <div className="grid grid-cols-1 gap-4">
           {currentQuestion?.options.map((option, index) => (
             <div

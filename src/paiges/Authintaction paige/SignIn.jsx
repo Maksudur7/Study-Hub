@@ -10,7 +10,6 @@ export default function SignIn() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-
     const { loginUser, googleLogin } = useContext(AuthContext);
     const navigate = useNavigate();
     const location = useLocation();
